@@ -26,8 +26,8 @@ module.exports.load = () => {
     config.cluster.worker.load.item = {};
     config.cluster.worker.load.item.name = config.cluster.load_type || 'cpu';
     if (config.cluster.worker.load.item.name === 'network') {
-      config.cluster.worker.load.interf = 'lo';
-      config.cluster.worker.load.max_scale = config.cluster.network_max_scale || 1000;
+      config.cluster.worker.load.item.interf = 'lo';
+      config.cluster.worker.load.item.max_scale = config.cluster.network_max_scale || 1000;
     }
 
     config.capacity = config.capacity || {};
