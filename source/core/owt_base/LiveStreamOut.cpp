@@ -17,36 +17,26 @@ LiveStreamOut::LiveStreamOut(const std::string& url, bool hasAudio, bool hasVide
     : AVStreamOut(url, hasAudio, hasVideo, handle, streamingTimeout)
     , m_options(options)
 {
-    switch(m_options.format) {
-        case STREAMING_FORMAT_RTSP:
-            ELOG_DEBUG("format %s", "rtsp");
-            break;
+    switch (m_options.format) {
+    case STREAMING_FORMAT_RTSP:
+        ELOG_DEBUG("format %s", "rtsp");
+        break;
 
-        case STREAMING_FORMAT_RTMP:
-            ELOG_DEBUG("format %s", "rtmp");
-            break;
+    case STREAMING_FORMAT_RTMP:
+        ELOG_DEBUG("format %s", "rtmp");
+        break;
 
-        case STREAMING_FORMAT_HLS:
-            ELOG_DEBUG("format %s, hls_time %d, hls_list_size %d, hls_method %s"
-                    , "hls"
-                    , m_options.hls_time
-                    , m_options.hls_list_size
-                    , m_options.hls_method
-                    );
-            break;
+    case STREAMING_FORMAT_HLS:
+        ELOG_DEBUG("format %s, hls_time %d, hls_list_size %d, hls_method %s", "hls", m_options.hls_time, m_options.hls_list_size, m_options.hls_method);
+        break;
 
-        case STREAMING_FORMAT_DASH:
-            ELOG_DEBUG("format %s, dash_seg_duration %d, dash_window_size %d, dash_method %s"
-                    , "dash"
-                    , m_options.dash_seg_duration
-                    , m_options.dash_window_size
-                    , m_options.dash_method
-                    );
-            break;
+    case STREAMING_FORMAT_DASH:
+        ELOG_DEBUG("format %s, dash_seg_duration %d, dash_window_size %d, dash_method %s", "dash", m_options.dash_seg_duration, m_options.dash_window_size, m_options.dash_method);
+        break;
 
-        default:
-            ELOG_ERROR("Invalid streaming format");
-            break;
+    default:
+        ELOG_ERROR("Invalid streaming format");
+        break;
     }
 }
 
@@ -58,44 +48,47 @@ LiveStreamOut::~LiveStreamOut()
 bool LiveStreamOut::isAudioFormatSupported(FrameFormat format)
 {
     switch (format) {
-        case owt_base::FRAME_FORMAT_AAC:
-        case owt_base::FRAME_FORMAT_AAC_48000_2:
-            return true;
-        default:
-            return false;
+    case owt_base::FRAME_FORMAT_AAC:
+    case owt_base::FRAME_FORMAT_AAC_48000_2:
+        return true;
+    default:
+        return false;
     }
 }
 
 bool LiveStreamOut::isVideoFormatSupported(FrameFormat format)
 {
     switch (format) {
-        case owt_base::FRAME_FORMAT_H264:
-            return true;
-        default:
-            return false;
+    case owt_base::FRAME_FORMAT_H264:
+        return true;
+    default:
+        return false;
     }
 }
 
-const char *LiveStreamOut::getFormatName(std::string& url)
+const char* LiveStreamOut::getFormatName(std::string& url)
 {
-    switch(m_options.format) {
-        case STREAMING_FORMAT_RTSP:
-            return "rtsp";
-        case STREAMING_FORMAT_RTMP:
-            return "flv";
-        case STREAMING_FORMAT_HLS:
-            return "hls";
-        case STREAMING_FORMAT_DASH:
-            return "dash";
-        default:
-            ELOG_ERROR("Invalid format for url(%s)", url.c_str());
-            return NULL;
+    switch (m_options.format) {
+    case STREAMING_FORMAT_RTSP:
+        return "rtsp";
+    case STREAMING_FORMAT_RTMP:
+        return "flv";
+    case STREAMING_FORMAT_HLS:
+        return "hls";
+    case STREAMING_FORMAT_DASH:
+        return "dash";
+    default:
+        ELOG_ERROR("Invalid format for url(%s)", url.c_str());
+        return NULL;
     }
 }
 
-bool LiveStreamOut::getHeaderOpt(std::string& url, AVDictionary **options)
+bool LiveStreamOut::getHeaderOpt(std::string& url, AVDictionary** options)
 {
-    if (m_options.format == STREAMING_FORMAT_HLS) {
+
+    if (m_options.format == STREAMING_FORMAT_RTMP) {
+        av_dict_set(options, "flvflags", "no_duration_filesize", 0);
+    } else if (m_options.format == STREAMING_FORMAT_HLS) {
         std::string::size_type pos1 = url.rfind('/');
         if (pos1 == std::string::npos) {
             ELOG_ERROR("Cant not find base url %s", url.c_str());
@@ -128,17 +121,17 @@ bool LiveStreamOut::getHeaderOpt(std::string& url, AVDictionary **options)
         av_dict_set_int(options, "hls_list_size", m_options.hls_list_size, 0);
 
         if (url.find("http://") == 0
-                || url.find("https://") == 0) {
+            || url.find("https://") == 0) {
             av_dict_set(options, "method", m_options.hls_method, 0);
         }
     } else if (m_options.format == STREAMING_FORMAT_DASH) {
         std::string::size_type last_slash = url.rfind('/');
-        if(last_slash == std::string::npos) {
+        if (last_slash == std::string::npos) {
             ELOG_ERROR("Unexpected format of %s", url.c_str());
             return false;
         }
         std::string::size_type last_dot = url.rfind('.');
-        if(last_dot == std::string::npos || last_dot < last_slash) {
+        if (last_dot == std::string::npos || last_dot < last_slash) {
             last_dot = url.length() - 1;
         }
         std::string basename(url.substr(last_slash + 1, last_dot - last_slash - 1));
@@ -166,7 +159,7 @@ bool LiveStreamOut::getHeaderOpt(std::string& url, AVDictionary **options)
         av_dict_set_int(options, "extra_window_size", m_options.dash_window_size, 0);
 
         if (url.find("http://") == 0
-                || url.find("https://") == 0) {
+            || url.find("https://") == 0) {
             av_dict_set(options, "method", m_options.dash_method, 0);
         }
     }
