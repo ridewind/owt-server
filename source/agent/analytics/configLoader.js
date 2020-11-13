@@ -31,6 +31,17 @@ module.exports.load = () => {
       config.cluster.worker.load.item.max_scale = config.cluster.network_max_scale || 1000;
     }
 
+    var resource = config.cluster.load_items;
+    //In current environment, always report CPU resource
+
+    if (resource.toLowerCase().indexOf("gpu") !== -1) {
+      config.cluster.worker.load.item.gpu = true;
+    }
+
+    if (resource.toLowerCase().indexOf("vpu") !== -1) {
+      config.cluster.worker.load.item.vpu = true;
+    }
+
     config.internal.ip_address = config.internal.ip_address || '';
     config.internal.network_interface = config.internal.network_interface || undefined;
     config.internal.minport = config.internal.minport || 0;
