@@ -193,6 +193,9 @@ function packTarget(target) {
           if (fs.existsSync('initcert.js')) {
             execSync(`pkg initcert.js -t ${pkg.targets}`);
           }
+          if (fs.existsSync('initcertauto.js')) {
+            execSync(`pkg initcertauto.js -t ${pkg.targets}`);
+          }
           execSync('pkg .');
           execSync('rm -rf auth');
           execSync('rm -rf data_access');
@@ -638,6 +641,9 @@ function packApps() {
   const certScript = `${distDir}/apps/current_app/initcert.js`;
   if (fs.existsSync(certScript))
     execSync(`chmod +x ${certScript}`);
+  const certAutoScript = `${distDir}/apps/current_app/initcertauto.js`;
+  if (fs.existsSync(certAutoScript))
+    execSync(`chmod +x ${certAutoScript}`);
 
   if (options['install-module']) {
     chdir(`${distDir}/apps/current_app`);
