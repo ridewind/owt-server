@@ -12,8 +12,7 @@
             "webrtc",
             "avstream",
             "gst-pipeline",
-            "sip",
-            "quicIO"
+            "sip"
         ]
     },
     "mcu-msdk" : {
