@@ -565,7 +565,7 @@ ENV LD_LIBRARY_PATH=/opt/intel/dldt/inference-engine/external/tbb/lib:/opt/intel
 RUN git config --global user.email "you@example.com" && \
     git config --global user.name "Your Name" && \
     git clone -b ${OWT_BRANCH} ${OWTSERVER_REPO} && \
-    cd /home/owt-server && ./scripts/installDepsUnattended.sh --disable-nonfree 
+    cd /home/owt-server && ./scripts/installDepsUnattended.sh --with-nonfree-libs
 
     # Get js client sdk for owt
 RUN cd /home && git clone ${OWT_SDK_REPO} && \
