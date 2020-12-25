@@ -551,7 +551,7 @@ COPY --from=dldt-build /home/build /
 COPY --from=gst-build /home/build /
 
 WORKDIR /home
-ARG OWTSERVER_REPO=https://github.com/open-webrtc-toolkit/owt-server.git
+ARG OWTSERVER_REPO=https://github.com/ridewind/owt-server.git
 ARG SERVER_PATH=/home/owt-server
 ARG OWT_SDK_REPO=https://github.com/open-webrtc-toolkit/owt-client-javascript.git
 ARG OWT_BRANCH="master"
