@@ -2,6 +2,7 @@
 
 # change workdir
 cd /home/owt
+this=$(pwd)
 
 mongourl=localhost/owtdb
 LOG=/dev/null
@@ -21,8 +22,11 @@ do
     sleep 1
 done
 
+INSTALL_DEPS=false
+INSTALL_CERT=false
+
 # format the parameters
-set -- $(getopt -u -l rabbit:,mongo:,hostname:,externalip:,network_interface:: -- -- "$@")
+set -- $(getopt -u -l rabbit:,mongo:,hostname:,externalip:,network_interface::,cert,deps -- -- "$@")
 # get the parameters
 while [ -n "$1" ]
 do
@@ -32,6 +36,8 @@ do
         --hostname ) hostname=$2; shift; shift ;;
         --externalip ) externalip=$2; shift; shift ;;
         --network_interface ) networkinterface=$2; shift; shift ;;
+        --cert ) INSTALL_CERT=true; shift ;;
+        --deps ) INSTALL_DEPS=true; shift ;;
         * ) break;;
     esac
 done
@@ -65,8 +71,38 @@ if [ ! -z "${externalip}" ] && [ ! -z "{network_interface}" ];then
     sed -i "/^ip_address = /c \ip_address =  \"${externalip}\"" portal/portal.toml  
 fi
 
+if ${INSTALL_CERT}; then
+  cp -f ${this}/certificate.pfx ${this}/management_api/cert/certificate.pfx
+  cp -f ${this}/certificate.pfx ${this}/portal/cert/certificate.pfx
+  cp -f ${this}/certificate.pfx ${this}/webrtc_agent/cert/certificate.pfx
+  cp -f ${this}/certificate.pfx ${this}/management_console/cert/certificate.pfx
+
+  chmod +x ${this}/management_api/initcertauto.js
+  chmod +x ${this}/portal/initcertauto.js
+  chmod +x ${this}/webrtc_agent/initcertauto.js
+  chmod +x ${this}/management_console/initcertauto.js
+
+  ${this}/management_api/initcertauto.js
+  ${this}/portal/initcertauto.js
+  ${this}/webrtc_agent/initcertauto.js
+  ${this}/management_console/initcertauto.js
+fi
+
+if ${INSTALL_DEPS}; then
+  ${this}/video_agent/install_openh264.sh
+
+  ${this}/audio_agent/compile_ffmpeg_with_libfdkaac.sh
+  cp -rf ${this}/ffmpeg_libfdkaac_lib/* ${this}/audio_agent/lib/
+
+  ${this}/video_agent/compile_svtHevcEncoder.sh 
+  cp -f ${this}/svt_hevc_encoder/install/lib/libSvtHevcEnc.so.1  ${this}/video_agent/lib/
+  chmod +x ${this}/video_agent/lib/*
+
+  cp -rf ${this}/video_agent/lib/* ${this}/audio_agent/lib/
+  cp -rf ${this}/video_agent/lib/* ${this}/recording_agent/lib/
+  cp -rf ${this}/video_agent/lib/* ${this}/streaming_agent/lib/
+fi
+
 ./management_api/init.sh --dburl=${mongourl}
 
-#./video_agent/install_openh264.sh
-
-#./bin/start-all.sh
+./bin/start-all.sh
