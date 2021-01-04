@@ -26,7 +26,7 @@ elif [ $build_type == "openvino" ]; then
     .
 
 elif [ $build_type == "package" ]; then
-  dockerfile=Dockerfile
+  dockerfile=ridewind.Dockerfile
   docker build --target owt-build -t owt:build \
     --build-arg http_proxy=${HTTP_PROXY} \
     --build-arg https_proxy=${HTTPS_PROXY} \
