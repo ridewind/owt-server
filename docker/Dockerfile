@@ -208,16 +208,8 @@ RUN cd /home && git clone --depth=1 -b ${OWT_BRANCH} ${OWT_SDK_REPO} && cd owt-c
     sed -i "/lssl/i\'\-L\/usr\/local\/ssl\/lib\'," /home/owt-server/source/agent/webrtc/rtcConn/binding.gyp && \
     sed -i "/lssl/i\'\-L\/usr\/local\/ssl\/lib\'," /home/owt-server/source/agent/webrtc/rtcFrame/binding.gyp && \
     cd ${SERVER_PATH} && export PKG_CONFIG_PATH=/usr/local/lib/x86_64-linux-gnu/pkgconfig && ./scripts/build.js -t mcu-all -r -c && \
-    ./scripts/pack.js -t all --install-module --no-pseudo --app-path /home/owt-client-javascript/dist/samples/conference
+    ./scripts/pack.js -t all -a ${OWT_BRANCH} -wf --install-module --no-pseudo --app-path /home/owt-client-javascript/dist/samples/conference
 
-FROM ubuntu:18.04 AS owt-dist
-COPY --chown=owt:owt --from=owt-build /home/owt-server/dist /home/owt
-COPY initowt.sh /home/owt
-RUN chmod+x /home/owt/initowt.sh && \
-    tar -zcvf /home/owt-server.tar.gz /home/owt && \
-    mkdir /dist
-
-CMD [ "cp","-f","/home/owt-server.tar.gz","/dist" ]
 
 FROM ubuntu:18.04 AS owt-run
 LABEL Description="This is the image for building OWT on Ubuntu 18.04"

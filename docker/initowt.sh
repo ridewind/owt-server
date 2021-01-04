@@ -91,9 +91,6 @@ fi
 if ${INSTALL_DEPS}; then
   ${this}/video_agent/install_openh264.sh
 
-  ${this}/audio_agent/compile_ffmpeg_with_libfdkaac.sh
-  cp -rf ${this}/ffmpeg_libfdkaac_lib/* ${this}/audio_agent/lib/
-
   ${this}/video_agent/compile_svtHevcEncoder.sh 
   cp -f ${this}/svt_hevc_encoder/install/lib/libSvtHevcEnc.so.1  ${this}/video_agent/lib/
   chmod +x ${this}/video_agent/lib/*
@@ -101,7 +98,12 @@ if ${INSTALL_DEPS}; then
   cp -rf ${this}/video_agent/lib/* ${this}/audio_agent/lib/
   cp -rf ${this}/video_agent/lib/* ${this}/recording_agent/lib/
   cp -rf ${this}/video_agent/lib/* ${this}/streaming_agent/lib/
+
+  ${this}/audio_agent/compile_ffmpeg_with_libfdkaac.sh
+  cp -rf ${this}/ffmpeg_libfdkaac_lib/* ${this}/audio_agent/lib/
 fi
+
+mkdir -p /recordings
 
 ./management_api/init.sh --dburl=${mongourl}
 
