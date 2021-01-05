@@ -12,10 +12,9 @@ PREFIX_DIR="${DOWNLOAD_DIR}/install"
 install_svt_hevc(){
     pushd $DOWNLOAD_DIR
     rm -rf SVT-HEVC
-    git clone https://github.com/intel/SVT-HEVC.git
+    git clone --depth=1 --branch v1.3.0 https://github.com/intel/SVT-HEVC.git
 
     pushd SVT-HEVC
-    git checkout v1.3.0
 
     mkdir build
     pushd build >/dev/null
