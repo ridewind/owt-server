@@ -22,8 +22,9 @@ ARG OWT_HEAD
 
 RUN git config --global user.email "you@example.com" && \
     git config --global user.name "Your Name" && \
-    git clone --depth=1 -b ${OWT_BRANCH} ${OWTSERVER_REPO} && \
-    cd /home/owt-server
+    git clone --depth=1 -b ${OWT_BRANCH} ${OWTSERVER_REPO}
+
+WORKDIR /home/owt-server
     
 RUN ./scripts/installDepsUnattendedViaArg.sh install_apt_deps
 RUN ./scripts/installDepsUnattendedViaArg.sh install_node
@@ -43,6 +44,7 @@ RUN ./scripts/installDepsUnattendedViaArg.sh install_svt_hevc
 RUN ./scripts/installDepsUnattendedViaArg.sh install_json_hpp
 RUN ./scripts/installDepsUnattendedViaArg.sh install_webrtc
 
+WORKDIR /home
 
     # Get js client sdk for owt
 RUN cd /home && git clone --depth=1 ${OWT_SDK_REPO} && \
