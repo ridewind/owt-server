@@ -17,6 +17,7 @@ ARG OWTSERVER_REPO=https://github.com/ridewind/owt-server.git
 ARG SERVER_PATH=/home/owt-server
 ARG OWT_SDK_REPO=https://github.com/open-webrtc-toolkit/owt-client-javascript.git
 ARG OWT_BRANCH="master"
+ARG OWT_HEAD
 #ENV LD_LIBRARY_PATH=/opt/intel/dldt/inference-engine/external/tbb/lib:/opt/intel/dldt/inference-engine/lib/intel64/
 
 RUN git config --global user.email "you@example.com" && \

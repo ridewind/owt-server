@@ -27,7 +27,8 @@ elif [ $build_type == "openvino" ]; then
 
 elif [ $build_type == "package" ]; then
   dockerfile=ridewind.Dockerfile
-  docker build --target owt-build -t owt:build \
+  OWT_HEAD="$(git rev-parse HEAD)"
+  docker build -f ${BASEDIR}/${dockerfile} --build-arg OWT_HEAD=${OWT_HEAD} --target owt-build -t owt:build \
     --build-arg http_proxy=${HTTP_PROXY} \
     --build-arg https_proxy=${HTTPS_PROXY} \
     .
