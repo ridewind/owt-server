@@ -66,7 +66,7 @@ parse_arguments(){
         install_libsrtp2
         ;;
       "install_quic")
-        install_quic
+        install_quic_unattended
         ;;
       "install_licode")
         install_licode

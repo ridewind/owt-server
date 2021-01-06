@@ -320,9 +320,16 @@ install_quic(){
     rm $QUIC_SDK_VERSION.zip
     cp bin/release/libowt_quic_transport.so $ROOT/build/libdeps/build/lib
   else
-    read -p "Failed to download prebuild QUIC SDK. Please download and compile QUIC SDK version $QUIC_SDK_VERSION from https://github.com/open-webrtc-toolkit/owt-deps-quic."
-  fi
+    if [ "$QUIC_UNATTENDED" != "true" ]; then 
+      read -p "Failed to download prebuild QUIC SDK. Please download and compile QUIC SDK version $QUIC_SDK_VERSION from https://github.com/open-webrtc-toolkit/owt-deps-quic."
+    fi
+   fi
   popd
+}
+
+install_quic_unattended(){
+  QUIC_UNATTENDED = "true"
+  install_quic
 }
 
 install_nicer(){
