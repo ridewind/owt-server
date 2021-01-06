@@ -23,7 +23,25 @@ ARG OWT_HEAD
 RUN git config --global user.email "you@example.com" && \
     git config --global user.name "Your Name" && \
     git clone --depth=1 -b ${OWT_BRANCH} ${OWTSERVER_REPO} && \
-    cd /home/owt-server && ./scripts/installDepsUnattended.sh --with-nonfree-libs
+    cd /home/owt-server
+    
+RUN ./scripts/installDepsUnattendedViaArg.sh install_apt_deps
+RUN ./scripts/installDepsUnattendedViaArg.sh install_node
+RUN ./scripts/installDepsUnattendedViaArg.sh install_mediadeps_nonfree
+RUN ./scripts/installDepsUnattendedViaArg.sh install_node_tools
+RUN ./scripts/installDepsUnattendedViaArg.sh install_zlib
+RUN ./scripts/installDepsUnattendedViaArg.sh install_libnice014
+RUN ./scripts/installDepsUnattendedViaArg.sh install_openssl
+RUN ./scripts/installDepsUnattendedViaArg.sh install_openh264
+RUN ./scripts/installDepsUnattendedViaArg.sh install_libre
+RUN ./scripts/installDepsUnattendedViaArg.sh install_libexpat
+RUN ./scripts/installDepsUnattendedViaArg.sh install_usrsctp
+RUN ./scripts/installDepsUnattendedViaArg.sh install_libsrtp2
+RUN ./scripts/installDepsUnattendedViaArg.sh install_quic
+RUN ./scripts/installDepsUnattendedViaArg.sh install_licode
+RUN ./scripts/installDepsUnattendedViaArg.sh install_svt_hevc
+RUN ./scripts/installDepsUnattendedViaArg.sh install_json_hpp
+RUN ./scripts/installDepsUnattendedViaArg.sh install_webrtc
 
 
     # Get js client sdk for owt
