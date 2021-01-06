@@ -328,8 +328,24 @@ install_quic(){
 }
 
 install_quic_unattended(){
-  QUIC_UNATTENDED = "true"
-  install_quic
+  # QUIC IO
+  rm $ROOT/third_party/quic-lib -rf
+  mkdir $ROOT/third_party/quic-lib
+
+  pushd ${ROOT}/third_party/quic-lib
+  wget https://github.com/open-webrtc-toolkit/owt-deps-quic/releases/download/v0.1/dist.tgz
+  tar xzf dist.tgz
+  popd
+
+  # QUIC transport
+  local QUIC_SDK_VERSION=`cat $ROOT/source/agent/addons/quic/quic_sdk_version`
+  local QUIC_TRANSPORT_PATH=$ROOT/third_party/quic-transport
+  rm -r $QUIC_TRANSPORT_PATH
+  mkdir $QUIC_TRANSPORT_PATH
+  pushd $QUIC_TRANSPORT_PATH
+  wget https://github.com/ridewind/owt-deps-quic/releases/download/v5.0-rc.1/libowt_quic_transport.so
+  cp libowt_quic_transport.so $ROOT/build/libdeps/build/lib
+  popd
 }
 
 install_nicer(){
