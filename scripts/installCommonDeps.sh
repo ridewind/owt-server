@@ -344,6 +344,7 @@ install_quic_unattended(){
   mkdir $QUIC_TRANSPORT_PATH
   pushd $QUIC_TRANSPORT_PATH
   wget https://github.com/ridewind/owt-deps-quic/releases/download/v5.0-rc.1/libowt_quic_transport.so
+  chmod +x libowt_quic_transport.so
   cp libowt_quic_transport.so $ROOT/build/libdeps/build/lib
   popd
 }
