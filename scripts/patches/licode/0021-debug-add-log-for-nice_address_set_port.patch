@@ -1,0 +1,32 @@
+From c3549b701a869d2a0552f3e3b60399eed770b398 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E6=9D=A8=E9=A3=9E?= <ridewind@gmail.com>
+Date: Fri, 15 Jan 2021 11:24:01 +0800
+Subject: [PATCH] add log for nice_address_set_port
+
+---
+ erizo/src/erizo/LibNiceConnection.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/erizo/src/erizo/LibNiceConnection.cpp b/erizo/src/erizo/LibNiceConnection.cpp
+index bc38c22a..c89f102f 100644
+--- a/erizo/src/erizo/LibNiceConnection.cpp
++++ b/erizo/src/erizo/LibNiceConnection.cpp
+@@ -289,6 +289,7 @@ bool LibNiceConnection::setRemoteCandidates(const std::vector<CandidateInfo> &ca
+     thecandidate->priority = cinfo.priority;
+     thecandidate->transport = NICE_CANDIDATE_TRANSPORT_UDP;
+     nice_address_set_from_string(&thecandidate->addr, cinfo.hostAddress.c_str());
++    ELOG_DEBUG("\tL292 Address Family: #%d, port: %d \n",&thecandidate->addr.s.addr.sa_family,cinfo.hostPort); 
+     nice_address_set_port(&thecandidate->addr, cinfo.hostPort);
+ 
+     std::ostringstream host_info;
+@@ -298,6 +299,7 @@ bool LibNiceConnection::setRemoteCandidates(const std::vector<CandidateInfo> &ca
+ 
+     if (cinfo.hostType == RELAY || cinfo.hostType == SRFLX) {
+       nice_address_set_from_string(&thecandidate->base_addr, cinfo.rAddress.c_str());
++      ELOG_DEBUG("\tL302 Address Family: #%d, port: %d \n",&thecandidate->base_addr.s.addr.sa_family,cinfo.rPort); 
+       nice_address_set_port(&thecandidate->base_addr, cinfo.rPort);
+       ELOG_DEBUG("%s message: adding relay or srflx remote candidate, %s, rAddress: %s, rPort: %d",
+                  toLog(), host_info.str().c_str(),
+-- 
+2.17.1
+
