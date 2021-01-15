@@ -551,7 +551,7 @@ COPY --from=dldt-build /home/build /
 COPY --from=gst-build /home/build /
 
 WORKDIR /home
-ARG OWTSERVER_REPO=https://github.com/open-webrtc-toolkit/owt-server.git
+ARG OWTSERVER_REPO=https://github.com/ridewind/owt-server.git
 ARG SERVER_PATH=/home/owt-server
 ARG OWT_SDK_REPO=https://github.com/open-webrtc-toolkit/owt-client-javascript.git
 ARG OWT_BRANCH="master"
@@ -565,7 +565,7 @@ ENV LD_LIBRARY_PATH=/opt/intel/dldt/inference-engine/external/tbb/lib:/opt/intel
 RUN git config --global user.email "you@example.com" && \
     git config --global user.name "Your Name" && \
     git clone -b ${OWT_BRANCH} ${OWTSERVER_REPO} && \
-    cd /home/owt-server && ./scripts/installDepsUnattended.sh --disable-nonfree 
+    cd /home/owt-server && ./scripts/installDepsUnattended.sh --with-nonfree-libs
 
     # Get js client sdk for owt
 RUN cd /home && git clone ${OWT_SDK_REPO} && \

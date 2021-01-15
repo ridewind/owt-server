@@ -95,7 +95,7 @@ if [ "$NIGHTLY" != "true" ]; then
 
   install_libsrtp2
 
-  install_quic
+  install_quic_unattended
 
   install_licode
 

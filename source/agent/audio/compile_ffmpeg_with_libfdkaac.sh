@@ -115,13 +115,13 @@ install_ffmpeg(){
   popd
 }
 
-echo "This script will download and compile a libfdk_aac enabled ffmpeg. The libfdk_aac is designated as 'non-free', please make sure you have got proper authority before using it."
-read -p "Continue to compile ffmpeg with libfdk_aac? [No/yes]" yn
-case $yn in
-  [Yy]* ) ;;
-  [Nn]* ) exit 0;;
-  * ) ;;
-esac
+# echo "This script will download and compile a libfdk_aac enabled ffmpeg. The libfdk_aac is designated as 'non-free', please make sure you have got proper authority before using it."
+# read -p "Continue to compile ffmpeg with libfdk_aac? [No/yes]" yn
+# case $yn in
+#   [Yy]* ) ;;
+#   [Nn]* ) exit 0;;
+#   * ) ;;
+# esac
 
 echo "Install building dependencies..."
 install_build_deps

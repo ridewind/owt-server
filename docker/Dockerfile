@@ -10,6 +10,7 @@ WORKDIR /home
 # COMMON BUILD TOOLS
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q --no-install-recommends build-essential autoconf make git wget pciutils cpio libtool lsb-release ca-certificates pkg-config bison flex libcurl4-gnutls-dev zlib1g-dev nasm yasm m4 autoconf libtool automake cmake libfreetype6-dev libgstreamer-plugins-base1.0-dev
 
+RUN echo 'check_certificate = off' > $HOME/.wgetrc
 
 # Build libnice
 ARG NICE_VER="0.1.4"
@@ -135,7 +136,7 @@ RUN wget -c ${JSON_LINK} && mv json.hpp /usr/include/
 
 
 # Build OWT specific modules
-ARG OWTSERVER_REPO=https://github.com/open-webrtc-toolkit/owt-server.git
+ARG OWTSERVER_REPO=https://github.com/ridewind/owt-server.git
 ARG OPENH264_MAJOR=1
 ARG OPENH264_MINOR=7
 ARG OPENH264_SOVER=4
@@ -145,7 +146,7 @@ ARG OPENH264_BINARYNAME=libopenh264-${OPENH264_MAJOR}.${OPENH264_MINOR}.0-linux6
 ARG OPENH264_BINARY=https://github.com/cisco/openh264/releases/download/v${OPENH264_MAJOR}.${OPENH264_MINOR}.0/${OPENH264_BINARYNAME}.bz2
 ARG LICODE_COMMIT="8b4692c88f1fc24dedad66b4f40b1f3d804b50ca"
 ARG LICODE_REPO=https://github.com/lynckia/licode.git
-ARG WEBRTC_REPO=https://github.com/open-webrtc-toolkit/owt-deps-webrtc.git
+ARG WEBRTC_REPO=https://github.com/ridewind/owt-deps-webrtc.git
 ARG SVT_VER=v1.3.0
 ARG SVT_REPO=https://github.com/intel/SVT-HEVC.git
 ARG SERVER_PATH=/home/owt-server
@@ -207,7 +208,7 @@ RUN cd /home && git clone --depth=1 -b ${OWT_BRANCH} ${OWT_SDK_REPO} && cd owt-c
     sed -i "/lssl/i\'\-L\/usr\/local\/ssl\/lib\'," /home/owt-server/source/agent/webrtc/rtcConn/binding.gyp && \
     sed -i "/lssl/i\'\-L\/usr\/local\/ssl\/lib\'," /home/owt-server/source/agent/webrtc/rtcFrame/binding.gyp && \
     cd ${SERVER_PATH} && export PKG_CONFIG_PATH=/usr/local/lib/x86_64-linux-gnu/pkgconfig && ./scripts/build.js -t mcu-all -r -c && \
-    ./scripts/pack.js -t all --install-module --no-pseudo --app-path /home/owt-client-javascript/dist/samples/conference
+    ./scripts/pack.js -t all -a ${OWT_BRANCH} -wf --install-module --no-pseudo --app-path /home/owt-client-javascript/dist/samples/conference
 
 
 FROM ubuntu:18.04 AS owt-run

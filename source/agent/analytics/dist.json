@@ -27,6 +27,7 @@
             "../../../scripts/release/install_ffmpeg.sh",
             "../../../scripts/release/initauth.js",
             "../../../scripts/release/initcert.js",
+            "../../../scripts/release/initcertauto.js",
             "../../../scripts/detectOS.sh"
         ],
         "folders": {

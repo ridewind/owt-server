@@ -200,6 +200,9 @@ function packTarget(target) {
           if (fs.existsSync('initcert.js')) {
             execSync(`pkg initcert.js -t ${pkg.targets}`);
           }
+          if (fs.existsSync('initcertauto.js')) {
+            execSync(`pkg initcertauto.js -t ${pkg.targets}`);
+          }
           execSync('pkg .');
           execSync('rm -rf auth');
           execSync('rm -rf data_access');
@@ -574,6 +577,8 @@ function packScripts() {
   execSync(`cp -a ${rootDir}/scripts/release/package.mcu.json ${distDir}/package.json`);
   execSync(`cp -a ${rootDir}/third_party/NOTICE ${distDir}`);
   execSync(`cp -a ${rootDir}/third_party/ThirdpartyLicenses.txt ${distDir}`);
+  execSync(`cp -a ${rootDir}/docker/initowt.sh ${distDir}`);
+  execSync(`chmod +x ${distDir}/initowt.sh`);
   if (options.binary) {
     execSync(`cp -a ${rootDir}/scripts/release/daemon-bin.sh ${binDir}/daemon.sh`);
   } else {
@@ -642,6 +647,9 @@ function packApps() {
   const certScript = `${distDir}/apps/current_app/initcert.js`;
   if (fs.existsSync(certScript))
     execSync(`chmod +x ${certScript}`);
+  const certAutoScript = `${distDir}/apps/current_app/initcertauto.js`;
+  if (fs.existsSync(certAutoScript))
+    execSync(`chmod +x ${certAutoScript}`);
 
   if (options['install-module']) {
     chdir(`${distDir}/apps/current_app`);
