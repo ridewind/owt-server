@@ -32,6 +32,40 @@
 
    ### Install Server https://software.intel.com/content/www/us/en/develop/articles/intel-collaboration-suite-for-webrtc.html
 
+   解压owt文件到```/home/owt```下 解压之后如下
+
+   ```
+   root@etc-webrtc:/home/owt# tree -L 1
+   .
+   ├── analytics_agent
+   ├── apps
+   ├── audio_agent
+   ├── bin
+   ├── certificate.pfx
+   ├── cluster_manager
+   ├── conference_agent
+   ├── ffmpeg_libfdkaac_lib
+   ├── ffmpeg_libfdkaac_src
+   ├── initowt.sh
+   ├── logs
+   ├── management_api
+   ├── management_console
+   ├── NOTICE
+   ├── package.json
+   ├── portal
+   ├── quic_agent
+   ├── recording_agent
+   ├── sip_agent
+   ├── sip_portal
+   ├── streaming_agent
+   ├── svt_hevc_encoder
+   ├── ThirdpartyLicenses.txt
+   ├── video_agent
+   └── webrtc_agent
+   ```
+
+
+
 5. Configure the MCU server machine
 
    1. Add or update the following lines in /etc/security/limits.conf, in order to set the maximum numbers of open files, running processes and maximum stack size to a large enough number:
@@ -82,7 +116,36 @@
 
    6. You can run command "ulimit -a" to make sure the new setting in limits.conf is correct as you set.
 
-6. Deploy Cisco OpenH264* Library
+6. 挂载录像目录
+
+   ```
+   apt install -y nfs-common
+   vi /etc/fstab
+   ```
+   添加挂载到fstab
+   ```
+   sfs-nas01.cn-east-3a.myhuaweicloud.com:/share-09bfed4f/resource/recordings   /recordings  nfs     vers=3,timeo=600,noresvport,nolock 0       1
+   ```
+   ```
+   mount -a
+   df /recordings
+   ```
+
+7. 初始化owt 0115之后打包的版本里 包含一个初始化脚本 可以简化后续安装操作
+   ```
+   ./initowt.sh --hostname live.hbmykjxy.futurelab.tv --externalip 119.3.158.104 --network_interface eth0 --cert --deps
+   ```
+   参数说明  
+   --hostname 直播服务器域名
+   --externalip 直播服务器对外ip
+   --network_interface 直播服务器网卡
+   --cert 设置证书（需要先将pfx格式证书文件放到/home/owt下）
+   --deps 安装相关依赖
+
+   执行脚本后 记录打印的 superServiceId superServiceKey 配置到智慧教学云
+
+## [Deprecated] 老版本需要 接步骤5
+1. Deploy Cisco OpenH264* Library
 
    ```shell
     ./video_agent/install_openh264.sh
@@ -90,7 +153,7 @@
 
    
 
-7. Compile and deploy ffmpeg with libfdk_aac
+2. Compile and deploy ffmpeg with libfdk_aac
 
    ```shell
     ./audio_agent/compile_ffmpeg_with_libfdkaac.sh 
@@ -99,7 +162,7 @@
 
    
 
-8. Deploy SVT-HEVC Encoder Library ***存疑 从docker构建出来的owt本身应该是安装了svt-hevc的 
+3. Deploy SVT-HEVC Encoder Library ***存疑 从docker构建出来的owt本身应该是安装了svt-hevc的 
 
    ```shell
    ./video_agent/compile_svtHevcEncoder.sh 
@@ -109,7 +172,7 @@
 
    
 
-9. config certificate
+4. config certificate
    management_api/management_api.toml
    portal/portal.toml
    webrtc_agent/agent.toml
@@ -122,7 +185,7 @@
    ./management_console/initcert.js
    ```
 
-10. Configuration Items for Public Access
+5.  Configuration Items for Public Access
 
     | Configuration Item                 | Location                           | Usage                                                        |
     | ---------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
@@ -135,7 +198,7 @@
 
     
 
-11. recording_agent.toml
+6.  recording_agent.toml
      ```toml
      path="/recordings"
      ```
@@ -153,7 +216,7 @@
     nginx
     ```
 
-13. nginx.conf
+7.  nginx.conf
 
     ```nginx
     user  root;  
@@ -189,7 +252,7 @@
 
     
 
-14. conf.d/defaut.conf
+8.  conf.d/defaut.conf
     ```nginx
     server {
         listen       18089 ssl;
@@ -232,13 +295,13 @@
     }
     ```
     
-11. startowt
+9.  startowt
 
     ```shell
     ./startowt.sh --hostname webrtc.zhjxy.kp.futurelab.tv --externalip 114.116.252.106 --network_interface eth0
     ```
 
-16. 
+10. 
 
     ```shell
     superServiceId: 5f8fdba751e8b92a1fc80bfd
